@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation</title>
+  <style>
+    .error {
+      color: pink;
+      font-size: 0.9em;
+    }
+    .invalid {
+      border-color: pink;
+    }
+  </style>
+</head>
+<body>
+  <h1>Form Pemesanan Tiket</h1>
+  <form id="ticketForm">
+    <div>
+      <label for="nama">Nama Pelanggan:</label>
+      <input type="text" id="nama" name="nama">
+      <span class="error" id="error-nama"></span>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email">
+      <span class="error" id="error-email"></span>
+    </div>
+    <div>
+      <label for="jam">Jam Keberangkatan:</label>
+      <input type="text" id="jam" name="jam" placeholder="HH.MM">
+      <span class="error" id="error-jam"></span>
+    </div>
+    <div>
+      <label for="tujuan">Tujuan Keberangkatan:</label>
+      <input type="text" id="tujuan" name="tujuan">
+      <span class="error" id="error-tujuan"></span>
+    </div>
+    <div>
+      <label for="jumlah">Jumlah Tiket:</label>
+      <input type="number" id="jumlah" name="jumlah">
+      <span class="error" id="error-jumlah"></span>
+    </div>
+    <button type="button" onclick="validateForm()">Submit</button>
+  </form>
+
+  <h2>Data Pemesanan</h2>
+  <div id="result"></div>
+
+  <script>
+    function validateForm() {
+      // Clear previous errors
+      document.querySelectorAll('.error').forEach(el => el.textContent = '');
+      document.querySelectorAll('input').forEach(el => el.classList.remove('invalid'));
+
+      // Get form values
+      const nama = document.getElementById('nama').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const jam = document.getElementById('jam').value.trim();
+      const tujuan = document.getElementById('tujuan').value.trim();
+      const jumlah = document.getElementById('jumlah').value.trim();
+
+      let isValid = true;
+
+      // Nama validation
+      if (!nama || nama.length > 30) {
+        document.getElementById('error-nama').textContent = 'Nama harus diisi dan maksimal 30 karakter';
+        document.getElementById('nama').classList.add('invalid');
+        isValid = false;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        document.getElementById('error-email').textContent = 'Email tidak valid';
+        document.getElementById('email').classList.add('invalid');
+        isValid = false;
+      }
+
+      // Jam validation
+      const jamRegex = /^([01]?\d|2[0-3])\.[0-5]\d$/;
+      if (!jam || !jamRegex.test(jam)) {
+        document.getElementById('error-jam').textContent = 'Jam harus dalam format HH.MM (00.00 - 23.59)';
+        document.getElementById('jam').classList.add('invalid');
+        isValid = false;
+      }
+
+      // Tujuan validation
+      if (!tujuan) {
+        document.getElementById('error-tujuan').textContent = 'Tujuan harus diisi';
+        document.getElementById('tujuan').classList.add('invalid');
+        isValid = false;
+      }
+
+      // Jumlah validation
+      const jumlahNumber = parseInt(jumlah, 10);
+      if (!jumlah || isNaN(jumlahNumber) || jumlahNumber < 1 || jumlahNumber > 10) {
+        document.getElementById('error-jumlah').textContent = 'Jumlah tiket harus antara 1-10';
+        document.getElementById('jumlah').classList.add('invalid');
+        isValid = false;
+      }
+
+      // If valid, show the result
+      if (isValid) {
+        document.getElementById('result').innerHTML = `
+          <p><strong>Nama Pelanggan:</strong> ${nama}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Jam Keberangkatan:</strong> ${jam}</p>
+          <p><strong>Tujuan Keberangkatan:</strong> ${tujuan}</p>
+          <p><strong>Jumlah Tiket:</strong> ${jumlah}</p>
+        `;
+      } else {
+        document.getElementById('result').innerHTML = '';
+      }
+    }
+  </script>
+</body>
+</html>
